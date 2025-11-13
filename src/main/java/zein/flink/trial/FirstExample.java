@@ -3,7 +3,7 @@ package zein.flink.trial;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 
-import zein.flink.trial.sources.FirstExampleDataSource;
+import zein.flink.trial.sources.SensorDataSourceFunction;
 
 //run this file using
 // MAVEN_OPTS="--add-opens java.base/java.lang=ALL-UNNAMED" mvn -Dexec.mainClass=zein.flink.trial.FirstExample exec:java
@@ -15,7 +15,7 @@ public class FirstExample {
             .getExecutionEnvironment();
 
         //2. Create a DataSream from some source
-        DataStream<String> inpuDataStream = env.addSource(new FirstExampleDataSource());
+        DataStream<String> inpuDataStream = env.addSource(new SensorDataSourceFunction());
 
         //3. To do something with the data stream (call some of the Flink operators)
 
