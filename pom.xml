@@ -58,16 +58,19 @@ under the License.
 			<groupId>org.apache.flink</groupId>
 			<artifactId>flink-java</artifactId>
 			<version>${flink.version}</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.flink</groupId>
 			<artifactId>flink-streaming-java_${scala.binary.version}</artifactId>
 			<version>${flink.version}</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.flink</groupId>
 			<artifactId>flink-clients_${scala.binary.version}</artifactId>
 			<version>${flink.version}</version>
+			<scope>provided</scope>
 		</dependency>
 
 		<!-- Add connector dependencies here. They must be in the default scope (compile). -->
@@ -227,4 +230,47 @@ under the License.
 			</plugins>
 		</pluginManagement>
 	</build>
+
+	<!-- Development profile: runs the app in a forked JVM with the module opens required for
+	     Flink's ClosureCleaner and Kryo to use reflection on JDK internals. This profile
+	     is non-default; run with `mvn -Pdev exec:java` -->
+	<profiles>
+		<profile>
+			<id>dev</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>exec-maven-plugin</artifactId>
+						<version>3.1.0</version>
+						<configuration>
+							<fork>true</fork>
+							<jvmArgs>--add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.util=ALL-UNNAMED</jvmArgs>
+							<mainClass>zein.flink.trial.FirstExample</mainClass>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+			<!-- For local development include Flink runtime on the classpath so exec:java works
+			     without modifying the main POM dependency scopes. These dependencies are
+			     only active when -Pdev is used. -->
+			<dependencies>
+				<dependency>
+					<groupId>org.apache.flink</groupId>
+					<artifactId>flink-java</artifactId>
+					<version>${flink.version}</version>
+				</dependency>
+				<dependency>
+					<groupId>org.apache.flink</groupId>
+					<artifactId>flink-streaming-java_${scala.binary.version}</artifactId>
+					<version>${flink.version}</version>
+				</dependency>
+				<dependency>
+					<groupId>org.apache.flink</groupId>
+					<artifactId>flink-clients_${scala.binary.version}</artifactId>
+					<version>${flink.version}</version>
+				</dependency>
+			</dependencies>
+		</profile>
+	</profiles>
 </project>

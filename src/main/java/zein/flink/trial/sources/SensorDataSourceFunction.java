@@ -26,7 +26,7 @@ public class SensorDataSourceFunction implements SourceFunction<String>{
         sensorIdsBySensorType.put("temp", List.of(1,2,3,4));
         sensorIdsBySensorType.put("co", List.of(5, 6, 7, 8));
         sensorIdsBySensorType.put("pres", List.of(9, 10));
-        sensorIdsBySensorType.put("hum", List.of(10, 11, 12));
+        sensorIdsBySensorType.put("hum", List.of(11, 12, 13));
 
         minValueBySensorType.put("temp",15D);
         minValueBySensorType.put("co", 0.5);
