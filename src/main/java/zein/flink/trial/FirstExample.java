@@ -1,5 +1,6 @@
 package zein.flink.trial;
 
+import org.apache.flink.api.common.functions.FilterFunction;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.streaming.api.datastream.DataStream;
@@ -30,8 +31,17 @@ public class FirstExample {
         .map((MapFunction<String, SensorData>)(String value) -> new Gson().fromJson(value, SensorData.class) //JSON string to SensorData object
         );
 
+        // FILTER operator DataStream<SensorData> -> DataStream<SensorData> 
+        DataStream<SensorData> filtereDataStream = sensorDataStream
+        .filter(new FilterFunction<SensorData>(){
+            @Override
+            public boolean filter(SensorData value) throws Exception {
+                Long sensorId = value.getSensorId();
+                return sensorId == 4 || sensorId == 8 || sensorId == 10 || sensorId == 13;
+            }           
+        });
         // FLAT MAP operator DataStream<SensorData> -> DataStream<SensorData> 
-        DataStream<SensorData> sensorDataFlatMapped = sensorDataStream.flatMap(new FlatMapFunction<SensorData, SensorData>(){
+        DataStream<SensorData> sensorDataFlatMapped = filtereDataStream.flatMap(new FlatMapFunction<SensorData, SensorData>(){
             @Override
             public void flatMap(SensorData value, org.apache.flink.util.Collector<SensorData> collector) throws Exception {
                 Long sensorId = value.getSensorId();;
